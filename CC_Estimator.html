@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Innovior | Ecosystem & ROI Architect</title>
+    <title>Innovior | Enterprise Sales & Solution Architect</title>
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -14,6 +14,7 @@
             --success-green: #10B981;
             --warning-orange: #F59E0B;
             --salesforce-blue: #00A1E0;
+            --probe-purple: #4C1D95;
             --bg-light: #F4F7F9;
             --card-bg: #FFFFFF;
             --text-dark: #2D3748;
@@ -24,26 +25,33 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
         body { margin: 0; background-color: var(--bg-light); color: var(--text-dark); }
 
+        /* Header & Nav */
         header {
-            background-color: var(--primary-navy); color: white; padding: 20px 40px;
+            background-color: var(--primary-navy); color: white; padding: 15px 40px;
             display: flex; align-items: center; justify-content: space-between;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100;
         }
         header h1 { margin: 0; font-size: 22px; font-weight: 700; }
         header h1 span { font-weight: 300; font-size: 14px; color: var(--innovior-blue); margin-left: 10px; }
+        
+        .header-actions button {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;
+            padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s;
+        }
+        .header-actions button:hover { background: var(--innovior-blue); border-color: var(--innovior-blue); }
 
         .container { display: flex; gap: 30px; padding: 30px 40px; max-width: 1600px; margin: 0 auto; }
         .left-panel { flex: 1.2; }
-        .right-panel { flex: 1; } /* Expanded slightly to fit the chart */
+        .right-panel { flex: 1; }
 
         .section-card {
-            background-color: var(--card-bg); border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03); padding: 25px; margin-bottom: 25px;
-            border-top: 4px solid var(--innovior-blue);
+            background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
+            padding: 25px; margin-bottom: 25px; border-top: 4px solid var(--innovior-blue);
         }
         .section-card.dark { border-top-color: var(--primary-navy); }
         .section-card.green { border-top-color: var(--success-green); }
         .section-card.sf { border-top-color: var(--salesforce-blue); }
+        .section-card.probe { border-top-color: var(--probe-purple); }
 
         h2 { margin-top: 0; font-size: 17px; color: var(--primary-navy); border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
 
@@ -59,51 +67,61 @@
         .tile-title { font-size: 14px; font-weight: 600; color: var(--primary-navy); margin-bottom: 4px; padding-right: 25px; }
         .tile-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
 
-        .sticky-panel { position: sticky; top: 90px; display: flex; flex-direction: column; gap: 20px; }
+        .sticky-panel { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* Commercial Toggle */
-        .osp-toggle-card {
-            background: linear-gradient(to right, #0F172A, var(--primary-navy));
-            border-radius: 12px; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-        }
-        .osp-toggle-card .info h3 { margin: 0 0 5px 0; font-size: 16px; color: var(--accent-cyan); }
-        .osp-toggle-card .info p { margin: 0; font-size: 12px; opacity: 0.8; }
+        /* Toggles */
+        .toggle-card { border-radius: 12px; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .toggle-card.osp { background: linear-gradient(to right, #0F172A, var(--primary-navy)); }
+        .toggle-card.probe { background: linear-gradient(to right, #2E1065, var(--probe-purple)); }
+        .toggle-card .info h3 { margin: 0 0 5px 0; font-size: 16px; color: var(--accent-cyan); }
+        .toggle-card.probe .info h3 { color: #DDD6FE; }
+        .toggle-card .info p { margin: 0; font-size: 12px; opacity: 0.8; }
         
         .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #475569; transition: .4s; border-radius: 34px; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.2); transition: .4s; border-radius: 34px; }
         .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--success-green); }
         input:checked + .slider:before { transform: translateX(26px); }
 
-        .roi-box { background: linear-gradient(135deg, var(--success-green) 0%, #047857 100%); color: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2); }
+        /* Outputs */
+        .roi-box { background: linear-gradient(135deg, var(--success-green) 0%, #047857 100%); color: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2); transition: 0.4s; }
         .roi-box .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
         .roi-metric { background: rgba(255,255,255,0.15); padding: 15px; border-radius: 8px; text-align: center; }
         .roi-metric .amount { font-size: 24px; font-weight: bold; }
         .roi-metric .label { font-size: 11px; text-transform: uppercase; opacity: 0.9; margin-top: 5px; }
 
-        /* Chart Container */
-        .chart-container { background: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); height: 280px; position: relative; }
+        .chart-container { background: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border-color); height: 240px; position: relative; }
 
         .output-card { background-color: var(--card-bg); border-radius: 12px; padding: 20px 25px; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .output-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; border-bottom: 1px dashed #E2E8F0; padding-bottom: 8px; align-items: center; }
         .output-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         .output-val { font-weight: 700; color: var(--primary-navy); }
         .output-val.waived { text-decoration: line-through; color: var(--text-muted); font-size: 12px; margin-right: 10px; }
-        .module-badge { font-size: 10px; background: #EBF8FF; color: var(--innovior-blue); padding: 3px 8px; border-radius: 12px; font-weight: 600; margin-left: 10px; }
         .total-row { font-size: 18px; font-weight: bold; color: var(--primary-navy); border-top: 2px solid var(--border-color); padding-top: 15px; margin-top: 15px; display: flex; justify-content: space-between; }
         
+        .action-btn { width: 100%; padding: 18px; background: var(--innovior-blue); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; box-shadow: 0 4px 12px rgba(0, 163, 224, 0.3); display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .action-btn:hover { background: #008CBE; transform: translateY(-2px); }
+
         .slider-group { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
         input[type="range"] { flex: 1; accent-color: var(--innovior-blue); }
         .slider-val { font-weight: bold; color: var(--innovior-blue); font-size: 18px; min-width: 50px; text-align: right; }
+
+        /* Modal Styles */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-content { background: white; padding: 30px; border-radius: 12px; width: 400px; max-width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .modal-content h3 { margin-top: 0; color: var(--primary-navy); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .modal-close { background: var(--primary-navy); color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; margin-top: 20px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <header>
         <div>
-            <h1>INNOVIOR <span>| Enterprise Solution & Financial Architect</span></h1>
+            <h1>INNOVIOR <span>| Enterprise Solution Architect</span></h1>
+        </div>
+        <div class="header-actions">
+            <button onclick="document.getElementById('settingsModal').style.display='flex'">⚙️ Assumptions & Levers</button>
         </div>
     </header>
 
@@ -118,7 +136,7 @@
                     <div class="form-group"><label>Monthly Interactions</label><input type="number" id="totalVol" value="75000" oninput="calculate()"></div>
                     <div class="form-group"><label>Current Cost Per Contact ($)</label><input type="number" step="0.5" id="cpc" value="12.50" oninput="calculate()"></div>
                 </div>
-                <div class="form-grid" style="margin-top: 10px; border-top: 1px dashed #ccc; padding-top: 15px;">
+                <div class="form-grid" style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 15px;">
                     <div class="form-group"><label>Simple Workflows (FAQ)</label><input type="number" id="wfSimple" value="10" min="0" oninput="calculate()"></div>
                     <div class="form-group"><label>Transactional (CRM)</label><input type="number" id="wfTrans" value="5" min="0" oninput="calculate()"></div>
                     <div class="form-group"><label>Complex (ERP/PCI)</label><input type="number" id="wfComplex" value="2" min="0" oninput="calculate()"></div>
@@ -154,22 +172,24 @@
                     <label class="tile"><input type="checkbox" id="sfOmniStudio" onchange="calculate()">
                         <div class="tile-title">OmniStudio</div><div class="tile-desc">Guided UI flows for agents.</div>
                     </label>
-                    <label class="tile"><input type="checkbox" id="sfVRA" onchange="calculate()">
-                        <div class="tile-title">Visual Remote Asst.</div><div class="tile-desc">Video co-browse via SMS.</div>
-                    </label>
                 </div>
             </div>
 
-            <!-- Commercial OSP Toggle -->
-            <div class="osp-toggle-card">
+            <!-- Commercial Modifiers -->
+            <div class="toggle-card probe">
                 <div class="info">
-                    <h3>Innovior OSP Bundle (3-Year Term)</h3>
-                    <p>Convert Upfront Build CAPEX into a predictable monthly OPEX.</p>
+                    <h3>Probe Group BPO Synergy</h3>
+                    <p>Outsource remaining human interactions to Probe Group at a blended rate.</p>
                 </div>
-                <label class="switch">
-                    <input type="checkbox" id="ospToggle" onchange="calculate()">
-                    <span class="slider"></span>
-                </label>
+                <label class="switch"><input type="checkbox" id="probeToggle" onchange="calculate()"><span class="slider"></span></label>
+            </div>
+
+            <div class="toggle-card osp">
+                <div class="info">
+                    <h3>Innovior OSP Bundle (3-Year)</h3>
+                    <p>Convert Upfront Build CAPEX into a predictable monthly OPEX (+12% risk).</p>
+                </div>
+                <label class="switch"><input type="checkbox" id="ospToggle" onchange="calculate()"><span class="slider"></span></label>
             </div>
 
         </div>
@@ -178,7 +198,7 @@
         <div class="right-panel">
             <div class="sticky-panel">
                 
-                <!-- Business Value Box -->
+                <!-- ROI Box -->
                 <div class="roi-box" id="roiBoxColor">
                     <div style="font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">Monthly Net Savings Realised</div>
                     <div style="font-size: 28px; font-weight: bold; margin-top: 5px;" id="outMonthlySavings">$0</div>
@@ -200,60 +220,74 @@
                     <canvas id="roiChart"></canvas>
                 </div>
 
-                <!-- Financial Modules -->
+                <!-- Timeline & Resources -->
                 <div class="output-card">
-                    <h2 id="capexHeader">Project Build (CAPEX)</h2>
+                    <h2 style="font-size:15px; margin-bottom: 10px;">📅 Project Timeline & Resourcing</h2>
                     <div class="output-row">
-                        <div>Foundation & Scoping</div>
-                        <span class="output-val" id="modFoundation">$0</span>
+                        <div>Estimated Build Duration</div>
+                        <span class="output-val" id="outWeeks">0 Weeks</span>
                     </div>
                     <div class="output-row">
-                        <div>AI & Data Implementation</div>
-                        <span class="output-val" id="modAI">$0</span>
-                    </div>
-                    <div class="total-row">
-                        <span>Total Implementation</span>
-                        <div>
-                            <span class="output-val waived" id="modTotalWaived" style="display: none;">$0</span>
-                            <span id="modTotalCapex" style="color: var(--innovior-blue);">$0</span>
-                        </div>
+                        <div>Client SME Engagement Required</div>
+                        <span class="output-val" id="outSME">0 Hours</span>
                     </div>
                 </div>
 
-                <div class="output-card">
-                    <h2>Platform Run Rate (OPEX / Month)</h2>
-                    <div class="output-row">
-                        <div>Salesforce & CCaaS Licensing</div>
-                        <span class="output-val" id="opxLic">$0</span>
-                    </div>
-                    <div class="output-row">
-                        <div>AI Consumption & Data Cloud</div>
-                        <span class="output-val" id="opxAI">$0</span>
-                    </div>
-                    <div class="output-row" id="ospRow" style="display: none; background: #EBF8FF; padding: 5px; border-radius: 4px;">
-                        <div style="color: var(--innovior-blue); font-weight: 600;">Amortized Build Fee (OSP)</div>
-                        <span class="output-val" id="opxOSP" style="color: var(--innovior-blue);">$0</span>
-                    </div>
-                    <div class="total-row">
-                        <span>Total Monthly Cost</span>
-                        <span id="opxTotal">$0</span>
-                    </div>
+                <!-- Financial Modules -->
+                <div class="output-card" style="display: none;" id="capexCard">
+                    <!-- Hidden visually to save space, data used in export -->
                 </div>
+
+                <button class="action-btn" onclick="generateExecutiveSummary()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    Copy Executive Summary (SOW)
+                </button>
 
             </div>
         </div>
     </div>
 
+    <!-- Assumptions Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-content">
+            <h3>⚙️ Financial & Delivery Assumptions</h3>
+            <div class="form-group">
+                <label>Innovior Blended Rate ($/hr)</label>
+                <input type="number" id="setRate" value="235" oninput="calculate()">
+            </div>
+            <div class="form-group">
+                <label>Copilot AHT Reduction (%)</label>
+                <input type="number" id="setCopilotAHT" value="15" oninput="calculate()">
+            </div>
+            <div class="form-group">
+                <label>Project Risk Contingency (%)</label>
+                <input type="number" id="setRisk" value="10" oninput="calculate()">
+            </div>
+            <div class="form-group">
+                <label>Probe Group BPO CPC ($)</label>
+                <input type="number" step="0.5" id="setProbeCPC" value="8.50" oninput="calculate()">
+            </div>
+            <div class="form-group">
+                <label>Dev Pod Size (People)</label>
+                <input type="number" id="setPodSize" value="2.5" step="0.5" oninput="calculate()">
+            </div>
+            <button class="modal-close" onclick="document.getElementById('settingsModal').style.display='none'">Apply & Close</button>
+        </div>
+    </div>
+
     <script>
         const formatter = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
-        let roiChartInstance = null; // Global variable for Chart
+        let roiChartInstance = null; 
+
+        // Global objects to hold calculation states for the Export function
+        let globalCalc = {};
 
         function updateDeflection() {
             document.getElementById('deflectionVal').innerText = document.getElementById('deflection').value + "%";
         }
 
         function calculate() {
-            // Inputs
+            // Read UI Inputs
             const agents = parseInt(document.getElementById('agents').value) || 0;
             const totalVol = parseInt(document.getElementById('totalVol').value) || 0;
             const cpc = parseFloat(document.getElementById('cpc').value) || 12.50;
@@ -265,65 +299,57 @@
 
             const aiAgentforce = document.getElementById('aiAgentforce').checked;
             const aiCopilot = document.getElementById('aiCopilot').checked;
-            
             const sfDataCloud = document.getElementById('sfDataCloud').checked;
             const sfFieldService = document.getElementById('sfFieldService').checked;
             const sfOmniStudio = document.getElementById('sfOmniStudio').checked;
-            const sfVRA = document.getElementById('sfVRA').checked;
 
             const isOSP = document.getElementById('ospToggle').checked;
+            const isProbe = document.getElementById('probeToggle').checked;
 
-            const rate = 235; 
+            // Read Assumptions
+            const rate = parseFloat(document.getElementById('setRate').value);
+            const copilotAHT = parseFloat(document.getElementById('setCopilotAHT').value) / 100;
+            const riskBuffer = parseFloat(document.getElementById('setRisk').value) / 100;
+            const probeCPC = parseFloat(document.getElementById('setProbeCPC').value);
+            const podSize = parseFloat(document.getElementById('setPodSize').value);
 
             // ==========================================
-            // CAPEX CALCULATION
+            // 1. CAPEX SIZING (Hours & Dollars)
             // ==========================================
             let hrsFoundation = 140 + (wfSimple * 4) + (wfTrans * 10) + (wfComplex * 20);
-            let costFoundation = hrsFoundation * rate;
-
             let hrsAI = 0;
             if (aiAgentforce) hrsAI += (wfSimple * 12) + (wfTrans * 24) + (wfComplex * 32);
             if (aiCopilot) hrsAI += 40 + (wfTrans * 8) + (wfComplex * 16); 
             if (sfDataCloud) hrsAI += 200; 
             if (sfFieldService) hrsAI += 320; 
             if (sfOmniStudio) hrsAI += (wfTrans * 16) + (wfComplex * 32);
-            if (sfVRA) hrsAI += 40; 
-            let costAI = hrsAI * rate;
 
-            let totalBaseCapex = costFoundation + costAI;
+            let totalHours = hrsFoundation + hrsAI;
+            totalHours = totalHours * (1 + riskBuffer); // Apply Risk Buffer
             
-            let displayCapex = totalBaseCapex;
+            let totalBaseCapex = totalHours * rate;
             let amortizedMonthlyFee = 0;
 
             if (isOSP) {
-                // Add 12% Cost of Capital / Risk Premium spread over 36 months
                 amortizedMonthlyFee = (totalBaseCapex * 1.12) / 36;
-                displayCapex = 0; 
-                
-                // Update UI visually for OSP
-                document.getElementById('capexHeader').innerText = "Project Build (Bundled in OSP)";
-                document.getElementById('modTotalWaived').style.display = "inline";
-                document.getElementById('modTotalWaived').innerText = formatter.format(totalBaseCapex);
-                document.getElementById('ospRow').style.display = "flex";
-                document.getElementById('lblPayback').innerText = "Day-1 Cash Flow";
-            } else {
-                document.getElementById('capexHeader').innerText = "Project Build (CAPEX)";
-                document.getElementById('modTotalWaived').style.display = "none";
-                document.getElementById('ospRow').style.display = "none";
-                document.getElementById('lblPayback').innerText = "Capex Payback";
             }
 
-            document.getElementById('modFoundation').innerText = formatter.format(costFoundation);
-            document.getElementById('modAI').innerText = formatter.format(costAI);
-            document.getElementById('modTotalCapex').innerText = formatter.format(displayCapex);
-            document.getElementById('opxOSP').innerText = formatter.format(amortizedMonthlyFee);
+            // ==========================================
+            // 2. TIMELINE & RESOURCING
+            // ==========================================
+            // Assume a dev pod does 30 productive billable hours per week per person. Add 4 weeks for Discover/UAT.
+            const buildWeeks = Math.ceil(totalHours / (podSize * 30)) + 4;
+            // Client SME time is generally 15% of total Innovior effort
+            const smeHours = Math.round(totalHours * 0.15);
+
+            document.getElementById('outWeeks').innerText = buildWeeks + " Weeks";
+            document.getElementById('outSME').innerText = smeHours + " Hours";
 
             // ==========================================
-            // OPEX CALCULATION
+            // 3. OPEX CALCULATION
             // ==========================================
             let licPrice = 180;
             if (sfFieldService) licPrice += 75; 
-            if (sfVRA) licPrice += 30; 
             if (sfOmniStudio) licPrice += 40; 
             let monthlyLic = agents * licPrice; 
             
@@ -333,39 +359,50 @@
             if (aiCopilot) monthlyAI += (totalVol * 0.25); 
             if (sfDataCloud) monthlyAI += 2500; 
 
-            // Total Tech Opex (Including Amortized fee if OSP)
-            const totalOpex = monthlyLic + monthlyAI + amortizedMonthlyFee;
-
-            document.getElementById('opxLic').innerText = formatter.format(monthlyLic);
-            document.getElementById('opxAI').innerText = formatter.format(monthlyAI);
-            document.getElementById('opxTotal').innerText = formatter.format(totalOpex);
+            const techOpex = monthlyLic + monthlyAI + amortizedMonthlyFee;
 
             // ==========================================
-            // ROI & SAVINGS CALCULATION
+            // 4. ROI & BUSINESS VALUE (Human Cost)
             // ==========================================
             const currentMonthlyCost = totalVol * cpc;
             const futureHumanVol = totalVol - botHandled;
             
-            let futureCPC = cpc;
-            if (aiCopilot) futureCPC *= 0.85; 
-            if (sfOmniStudio) futureCPC *= 0.90; 
-            if (sfVRA) futureCPC *= 0.80; 
-            
-            const futureHumanCost = futureHumanVol * futureCPC;
-            const futureTotalCost = futureHumanCost + totalOpex; // Human labor + Tech Platform
+            let futureHumanCost = 0;
+            let usedCPC = cpc;
+
+            if (isProbe) {
+                usedCPC = probeCPC; // Apply Probe Offshore/Blended Rate
+            }
+            if (aiCopilot) {
+                usedCPC = usedCPC * (1 - copilotAHT); // Apply Copilot Efficiency
+            }
+            if (sfOmniStudio) {
+                usedCPC = usedCPC * 0.90; // OmniStudio Efficiency
+            }
+
+            futureHumanCost = futureHumanVol * usedCPC;
+            const futureTotalCost = futureHumanCost + techOpex; 
             
             const monthlyNetSavings = currentMonthlyCost - futureTotalCost;
 
-            // UI Updates for ROI Box
+            // Save to Global for Export
+            globalCalc = {
+                botHandled, monthlyNetSavings, totalBaseCapex, isOSP, isProbe, buildWeeks, smeHours,
+                techOpex, futureHumanCost, currentMonthlyCost
+            };
+
+            // UI Updates
             if (monthlyNetSavings > 0) {
                 document.getElementById('outMonthlySavings').innerText = formatter.format(monthlyNetSavings);
                 document.getElementById('roiBoxColor').style.background = "linear-gradient(135deg, var(--success-green) 0%, #047857 100%)";
                 
                 if (isOSP) {
-                    document.getElementById('outPayback').innerText = "Positive";
+                    document.getElementById('outPayback').innerText = "Cash Pos.";
+                    document.getElementById('lblPayback').innerText = "Day-1 Cash Flow";
                 } else {
                     const paybackMonths = (totalBaseCapex / monthlyNetSavings).toFixed(1);
                     document.getElementById('outPayback').innerText = paybackMonths + " Mo";
+                    document.getElementById('lblPayback').innerText = "Capex Payback";
                 }
             } else {
                 document.getElementById('outMonthlySavings').innerText = "Negative";
@@ -374,88 +411,89 @@
             }
             document.getElementById('outDeflected').innerText = botHandled.toLocaleString();
 
-            // ==========================================
             // CHART.JS UPDATE
-            // ==========================================
             let labels = [];
-            let currentCostData =[];
+            let currentCostData = [];
             let innoviorCostData =[];
 
-            // Generate data points for 36 months
-            for(let month = 0; month <= 36; month+=3) { // Step by 3 months to make chart cleaner
+            for(let month = 0; month <= 36; month+=3) { 
                 labels.push("M" + month);
                 currentCostData.push(month * currentMonthlyCost);
                 
                 if(month === 0) {
-                    innoviorCostData.push(displayCapex); // Day 0 is Capex (which is 0 if OSP)
+                    innoviorCostData.push(isOSP ? 0 : totalBaseCapex); 
                 } else {
-                    innoviorCostData.push(displayCapex + (month * futureTotalCost));
+                    let cumulativeTechAndHuman = month * futureTotalCost;
+                    innoviorCostData.push((isOSP ? 0 : totalBaseCapex) + cumulativeTechAndHuman);
                 }
             }
-
             renderChart(labels, currentCostData, innoviorCostData);
         }
 
         function renderChart(labels, currentCostData, innoviorCostData) {
             const ctx = document.getElementById('roiChart').getContext('2d');
-            
-            if (roiChartInstance) {
-                roiChartInstance.destroy();
-            }
+            if (roiChartInstance) roiChartInstance.destroy();
 
             roiChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets:[
-                        {
-                            label: 'Status Quo Cost (Do Nothing)',
-                            data: currentCostData,
-                            borderColor: '#EF4444', // Red
-                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            fill: false,
-                            tension: 0.1
-                        },
-                        {
-                            label: 'Innovior Solution Cost',
-                            data: innoviorCostData,
-                            borderColor: '#00A3E0', // Innovior Blue
-                            backgroundColor: 'rgba(0, 163, 224, 0.1)',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.1
-                        }
+                        { label: 'Status Quo Cost', data: currentCostData, borderColor: '#EF4444', borderDash: [5, 5], fill: false, tension: 0.1 },
+                        { label: 'Innovior Target State Cost', data: innoviorCostData, borderColor: '#00A3E0', backgroundColor: 'rgba(0, 163, 224, 0.1)', borderWidth: 3, fill: true, tension: 0.1 }
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) { label += ': '; }
-                                    if (context.parsed.y !== null) { label += new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 }).format(context.parsed.y); }
-                                    return label;
-                                }
-                            }
-                        }
-                    },
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10 } } } },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) { return '$' + (value / 1000) + 'k'; },
-                                font: { size: 10 }
-                            }
-                        },
+                        y: { ticks: { callback: function(value) { return '$' + (value / 1000) + 'k'; }, font: { size: 10 } } },
                         x: { ticks: { font: { size: 10 } } }
                     }
                 }
+            });
+        }
+
+        function generateExecutiveSummary() {
+            // Generates formatted text for AE clipboard
+            let txt = `==============================================\n`;
+            txt += `INNOVIOR ENTERPRISE SOLUTION SUMMARY\n`;
+            txt += `==============================================\n\n`;
+            
+            txt += `🎯 BUSINESS OUTCOMES:\n`;
+            txt += `- AI Automation: ${globalCalc.botHandled.toLocaleString()} interactions deflected by Agentforce monthly.\n`;
+            txt += `- Operational Savings: ${formatter.format(globalCalc.monthlyNetSavings)} net savings per month.\n`;
+            
+            if (globalCalc.isProbe) {
+                txt += `- BPO Synergy: Remaining human interactions managed by Probe Group at optimized rates.\n`;
+            }
+            if (globalCalc.isOSP) {
+                txt += `- Financial ROI: Immediate Day-1 positive cash flow (Zero upfront Capex via OSP).\n`;
+            } else {
+                const payback = (globalCalc.totalBaseCapex / globalCalc.monthlyNetSavings).toFixed(1);
+                txt += `- Financial ROI: Project break-even achieved in ${payback} months.\n`;
+            }
+
+            txt += `\n📅 DELIVERY & TIMELINE:\n`;
+            txt += `- Estimated Build Duration: ${globalCalc.buildWeeks} Weeks\n`;
+            txt += `- Client SME Time Required: ~${globalCalc.smeHours} Hours\n`;
+
+            txt += `\n💰 COMMERCIAL ESTIMATES:\n`;
+            if (globalCalc.isOSP) {
+                txt += `- Implementation CAPEX: $0 (Amortized into 36-month OSP contract)\n`;
+            } else {
+                txt += `- Implementation CAPEX (Fixed Price Estimate): ${formatter.format(globalCalc.totalBaseCapex)}\n`;
+            }
+            txt += `- Tech Platform OPEX (Monthly): ${formatter.format(globalCalc.techOpex)}\n`;
+            txt += `- Est. Human/BPO Cost (Monthly): ${formatter.format(globalCalc.futureHumanCost)}\n`;
+            
+            txt += `\nNote: This is an indicative sizing estimate based on current workflow assumptions.\n`;
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(txt).then(() => {
+                alert("✅ Executive Summary copied to clipboard! Ready to paste into an email or SOW.");
+            }).catch(err => {
+                alert("Failed to copy text: ", err);
             });
         }
 
