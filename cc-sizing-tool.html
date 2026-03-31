@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Innovior | Contact Centre Platform Sizer</title>
+    <title>CW Example | Contact Centre Platform Sizer</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --primary-navy: #0B1D3A;
-            --innovior-blue: #00A3E0;
+            --cw-example-blue: #00A3E0;
             --accent-cyan: #00D2FF;
             --teal: #00BFA6;
             --success-green: #10B981;
             --warning-orange: #F59E0B;
             --salesforce-blue: #00A1E0;
-            --probe-purple: #4C1D95;
+            --partner-purple: #4C1D95;
             --bg-light: #F4F7F9;
             --card-bg: #FFFFFF;
             --text-dark: #2D3748;
@@ -28,14 +28,14 @@
         header h1 { margin: 0; font-size: 22px; font-weight: 700; }
         header h1 span { font-weight: 300; font-size: 14px; color: var(--teal); margin-left: 10px; }
         .header-actions button { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; }
-        .header-actions button:hover { background: var(--innovior-blue); border-color: var(--innovior-blue); }
+        .header-actions button:hover { background: var(--cw-example-blue); border-color: var(--cw-example-blue); }
         .container { display: flex; gap: 30px; padding: 30px 40px; max-width: 1700px; margin: 0 auto; }
         .left-panel { flex: 1.3; } .right-panel { flex: 1; }
-        .section-card { background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); padding: 25px; margin-bottom: 25px; border-top: 4px solid var(--innovior-blue); }
+        .section-card { background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); padding: 25px; margin-bottom: 25px; border-top: 4px solid var(--cw-example-blue); }
         .section-card.green { border-top-color: var(--success-green); }
         .section-card.teal { border-top-color: var(--teal); }
         .section-card.sf { border-top-color: var(--salesforce-blue); }
-        .section-card.probe { border-top-color: var(--probe-purple); }
+        .section-card.probe { border-top-color: var(--partner-purple); }
         .section-card.dark { border-top-color: var(--primary-navy); }
         .section-card.orange { border-top-color: var(--warning-orange); }
         h2 { margin-top: 0; font-size: 16px; color: var(--primary-navy); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 18px; }
@@ -43,18 +43,18 @@
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-bottom: 12px; }
         .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.02em; }
         select, input[type="number"] { width: 100%; padding: 9px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; outline: none; transition: 0.3s; background-color: #FAFCFF; }
-        select:focus, input[type="number"]:focus { border-color: var(--innovior-blue); background-color: #FFF; box-shadow: 0 0 0 3px rgba(0, 163, 224, 0.1); }
+        select:focus, input[type="number"]:focus { border-color: var(--cw-example-blue); background-color: #FFF; box-shadow: 0 0 0 3px rgba(0, 163, 224, 0.1); }
         .sub-label { font-size: 10px; color: var(--text-muted); font-style: italic; margin-top: 2px; }
         .tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
         .tile { border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 14px; cursor: pointer; transition: all 0.2s; background: #fff; position: relative; }
-        .tile:hover { border-color: var(--innovior-blue); background-color: #F8FCFF; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .tile:hover { border-color: var(--cw-example-blue); background-color: #F8FCFF; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .tile input[type="checkbox"] { position: absolute; top: 12px; right: 12px; accent-color: var(--teal); width: 16px; height: 16px; cursor: pointer; }
         .tile-title { font-size: 13px; font-weight: 600; color: var(--primary-navy); margin-bottom: 3px; padding-right: 25px; }
         .tile-desc { font-size: 10px; color: var(--text-muted); line-height: 1.4; }
         .sticky-panel { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 16px; }
         .toggle-card { border-radius: 12px; padding: 18px 20px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 15px rgba(0,0,0,0.1); margin-bottom: 16px; }
         .toggle-card.osp { background: linear-gradient(to right, #0F172A, var(--primary-navy)); }
-        .toggle-card.probe { background: linear-gradient(to right, #2E1065, var(--probe-purple)); }
+        .toggle-card.probe { background: linear-gradient(to right, #2E1065, var(--partner-purple)); }
         .toggle-card .info h3 { margin: 0 0 4px 0; font-size: 15px; color: var(--accent-cyan); }
         .toggle-card.probe .info h3 { color: #DDD6FE; }
         .toggle-card .info p { margin: 0; font-size: 11px; opacity: 0.8; }
@@ -99,7 +99,7 @@
 <body>
 
 <header>
-    <div><h1>INNOVIOR <span>| Contact Centre Platform Sizer</span></h1></div>
+    <div><h1>CW EXAMPLE <span>| Contact Centre Platform Sizer</span></h1></div>
     <div class="header-actions">
         <button onclick="document.getElementById('settingsModal').style.display='flex'">&#9881;&#65039; Assumptions &amp; Rates</button>
     </div>
@@ -202,8 +202,8 @@
             </div>
         </div>
 
-        <div class="toggle-card probe"><div class="info"><h3>Probe Group BPO Synergy</h3><p>Outsource remaining human interactions to Probe at blended offshore rate.</p></div><label class="switch"><input type="checkbox" id="probeToggle" onchange="calc()"><span class="slider-sw"></span></label></div>
-        <div class="toggle-card osp"><div class="info"><h3>Innovior OSP Bundle (3-Year)</h3><p>Convert CAPEX build into predictable monthly OPEX (+12% risk premium).</p></div><label class="switch"><input type="checkbox" id="ospToggle" onchange="calc()"><span class="slider-sw"></span></label></div>
+        <div class="toggle-card probe"><div class="info"><h3>BPO Partner Synergy</h3><p>Outsource remaining human interactions to BPO partner at blended offshore rate.</p></div><label class="switch"><input type="checkbox" id="probeToggle" onchange="calc()"><span class="slider-sw"></span></label></div>
+        <div class="toggle-card osp"><div class="info"><h3>OSP Bundle (3-Year)</h3><p>Convert CAPEX build into predictable monthly OPEX (+12% risk premium).</p></div><label class="switch"><input type="checkbox" id="ospToggle" onchange="calc()"><span class="slider-sw"></span></label></div>
 
     </div>
 
@@ -251,10 +251,10 @@
 <div class="modal-overlay" id="settingsModal">
     <div class="modal-content">
         <h3>&#9881;&#65039; Delivery &amp; Commercial Assumptions</h3>
-        <div class="form-group"><label>Innovior Blended Rate ($/hr)</label><input type="number" id="setRate" value="235" oninput="calc()"></div>
+        <div class="form-group"><label>CW Example Blended Rate ($/hr)</label><input type="number" id="setRate" value="235" oninput="calc()"></div>
         <div class="form-group"><label>Copilot AHT Reduction (%)</label><input type="number" id="setCopilotAHT" value="15" oninput="calc()"></div>
         <div class="form-group"><label>Risk Contingency (%)</label><input type="number" id="setRisk" value="10" oninput="calc()"></div>
-        <div class="form-group"><label>Probe BPO CPC ($)</label><input type="number" step="0.5" id="setProbeCPC" value="8.50" oninput="calc()"></div>
+        <div class="form-group"><label>BPO Partner CPC ($)</label><input type="number" step="0.5" id="setProbeCPC" value="8.50" oninput="calc()"></div>
         <div class="form-group"><label>Dev Pod Size (people)</label><input type="number" id="setPodSize" value="2.5" step="0.5" oninput="calc()"></div>
         <div class="form-group"><label>SF License Base ($/agent/mo)</label><input type="number" id="setLicBase" value="180" oninput="calc()"></div>
         <div class="form-group"><label>Agentforce $/conversation</label><input type="number" id="setAFPrice" value="2.50" step="0.25" oninput="calc()"></div>
@@ -475,7 +475,7 @@ function renderChart(currentMo, futureMo, capex, isOSP) {
     chartInst = new Chart(ctx, {
         type: 'line', data: { labels: labels, datasets: [
             { label: 'Status Quo', data: cur, borderColor: '#EF4444', borderDash: [5,5], fill: false, tension: 0.1 },
-            { label: 'Innovior Target', data: inn, borderColor: '#00BFA6', backgroundColor: 'rgba(0,191,166,0.08)', borderWidth: 3, fill: true, tension: 0.1 }
+            { label: 'CW Example Target', data: inn, borderColor: '#00BFA6', backgroundColor: 'rgba(0,191,166,0.08)', borderWidth: 3, fill: true, tension: 0.1 }
         ]},
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10 } } } }, scales: { y: { ticks: { callback: function(v) { return '$' + (v/1000) + 'k'; }, font: { size: 10 } } }, x: { ticks: { font: { size: 10 } } } } }
     });
@@ -509,13 +509,13 @@ function copyExecSummary() {
     var flagRows = flags.map(function(fl){ return '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;color:#475569;border-bottom:1px solid #F1F5F9">' + fl + '</div>'; }).join('');
 
     var ospTag = G.isOSP ? '<div style="display:inline-block;background:rgba(0,191,166,.15);color:#00BFA6;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-top:12px;margin-right:8px">OSP MODEL</div>' : '';
-    var probeTag = G.isProbe ? '<div style="display:inline-block;background:rgba(124,58,237,.15);color:#A78BFA;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-top:12px">PROBE BPO</div>' : '';
+    var probeTag = G.isProbe ? '<div style="display:inline-block;background:rgba(124,58,237,.15);color:#A78BFA;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-top:12px">BPO PARTNER</div>' : '';
     var capexCell = G.isOSP ? '<s style="color:#94A3B8">' + F(G.capex) + '</s> $0 (OSP)' : F(G.capex);
     var ospAmortRow = G.isOSP ? '<tr><td style="padding:10px 14px;border-bottom:1px solid #F1F5F9;font-weight:500">&nbsp;&nbsp;\u21b3 OSP Amortised (+12%)</td><td style="padding:10px 14px;border-bottom:1px solid #F1F5F9;text-align:right;font-weight:700;color:#0B1D3A">' + F(G.amortized) + '/mo</td></tr>' : '';
 
     var h = [];
     h.push('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">');
-    h.push('<title>Innovior - CC Platform Sizing</title>');
+    h.push('<title>CW Example - CC Platform Sizing</title>');
     h.push('<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">');
     h.push('<style>');
     h.push('*{margin:0;padding:0;box-sizing:border-box}');
@@ -562,8 +562,8 @@ function copyExecSummary() {
     h.push('<div class="tb np"><button class="bp" onclick="window.print()">Print / Save PDF</button></div>');
 
     h.push('<div class="pg">');
-    h.push('<div class="hd"><div class="hd-top"><div><div class="logo">INNOVIOR<b>.</b></div>');
-    h.push('<div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px">A Probe Group Company</div></div>');
+    h.push('<div class="hd"><div class="hd-top"><div><div class="logo">CW EXAMPLE<b>.</b></div>');
+    h.push('<div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px">Enterprise Contact Centre Sizing</div></div>');
     h.push('<div class="dt"><strong>Prepared</strong>' + d + '</div></div>');
     h.push('<div class="ttl">Contact Centre Platform Sizing</div>');
     h.push('<div class="sub">Indicative solution sizing and commercial estimate</div>');
@@ -646,7 +646,7 @@ function copyExecSummary() {
     h.push('<div class="co"><h3>Important</h3><p>Indicative sizing estimate. Subject to formal discovery. Licensing approximate per Salesforce terms. Includes ' + riskPct + '% contingency. Not a binding offer.</p></div>');
 
     h.push('</div>');
-    h.push('<div class="ft"><div><strong>Innovior</strong> \u2014 a Probe Group company</div><div>Confidential | ' + d + '</div></div>');
+    h.push('<div class="ft"><div><strong>CW Example</strong> \u2014 a BPO Partner company</div><div>Confidential | ' + d + '</div></div>');
     h.push('</div></body></html>');
 
     var blob = new Blob([h.join('\n')], {type: 'text/html'});
