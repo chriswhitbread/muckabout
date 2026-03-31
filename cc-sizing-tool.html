@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovior | Contact Centre Platform Sizer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-navy: #0B1D3A;
+            --innovior-blue: #00A3E0;
+            --accent-cyan: #00D2FF;
+            --teal: #00BFA6;
+            --success-green: #10B981;
+            --warning-orange: #F59E0B;
+            --salesforce-blue: #00A1E0;
+            --probe-purple: #4C1D95;
+            --bg-light: #F4F7F9;
+            --card-bg: #FFFFFF;
+            --text-dark: #2D3748;
+            --text-muted: #718096;
+            --border-color: #E2E8F0;
+            --red: #EF4444;
+        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { margin: 0; background-color: var(--bg-light); color: var(--text-dark); }
+        header { background-color: var(--primary-navy); color: white; padding: 15px 40px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        header h1 { margin: 0; font-size: 22px; font-weight: 700; }
+        header h1 span { font-weight: 300; font-size: 14px; color: var(--teal); margin-left: 10px; }
+        .header-actions button { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; transition: 0.2s; }
+        .header-actions button:hover { background: var(--innovior-blue); border-color: var(--innovior-blue); }
+        .container { display: flex; gap: 30px; padding: 30px 40px; max-width: 1700px; margin: 0 auto; }
+        .left-panel { flex: 1.3; } .right-panel { flex: 1; }
+        .section-card { background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); padding: 25px; margin-bottom: 25px; border-top: 4px solid var(--innovior-blue); }
+        .section-card.green { border-top-color: var(--success-green); }
+        .section-card.teal { border-top-color: var(--teal); }
+        .section-card.sf { border-top-color: var(--salesforce-blue); }
+        .section-card.probe { border-top-color: var(--probe-purple); }
+        .section-card.dark { border-top-color: var(--primary-navy); }
+        .section-card.orange { border-top-color: var(--warning-orange); }
+        h2 { margin-top: 0; font-size: 16px; color: var(--primary-navy); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 18px; }
+        h2 .badge { font-size: 10px; background: var(--teal); color: white; padding: 2px 8px; border-radius: 10px; font-weight: 700; vertical-align: middle; margin-left: 8px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.02em; }
+        select, input[type="number"] { width: 100%; padding: 9px 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 13px; outline: none; transition: 0.3s; background-color: #FAFCFF; }
+        select:focus, input[type="number"]:focus { border-color: var(--innovior-blue); background-color: #FFF; box-shadow: 0 0 0 3px rgba(0, 163, 224, 0.1); }
+        .sub-label { font-size: 10px; color: var(--text-muted); font-style: italic; margin-top: 2px; }
+        .tile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+        .tile { border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 14px; cursor: pointer; transition: all 0.2s; background: #fff; position: relative; }
+        .tile:hover { border-color: var(--innovior-blue); background-color: #F8FCFF; transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .tile input[type="checkbox"] { position: absolute; top: 12px; right: 12px; accent-color: var(--teal); width: 16px; height: 16px; cursor: pointer; }
+        .tile-title { font-size: 13px; font-weight: 600; color: var(--primary-navy); margin-bottom: 3px; padding-right: 25px; }
+        .tile-desc { font-size: 10px; color: var(--text-muted); line-height: 1.4; }
+        .sticky-panel { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 16px; }
+        .toggle-card { border-radius: 12px; padding: 18px 20px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 8px 15px rgba(0,0,0,0.1); margin-bottom: 16px; }
+        .toggle-card.osp { background: linear-gradient(to right, #0F172A, var(--primary-navy)); }
+        .toggle-card.probe { background: linear-gradient(to right, #2E1065, var(--probe-purple)); }
+        .toggle-card .info h3 { margin: 0 0 4px 0; font-size: 15px; color: var(--accent-cyan); }
+        .toggle-card.probe .info h3 { color: #DDD6FE; }
+        .toggle-card .info p { margin: 0; font-size: 11px; opacity: 0.8; }
+        .switch { position: relative; display: inline-block; width: 54px; height: 30px; flex-shrink: 0; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider-sw { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.2); transition: .4s; border-radius: 30px; }
+        .slider-sw:before { position: absolute; content: ""; height: 22px; width: 22px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider-sw { background-color: var(--success-green); }
+        input:checked + .slider-sw:before { transform: translateX(24px); }
+        .hero-box { padding: 22px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); transition: 0.4s; color: white; }
+        .hero-box.green { background: linear-gradient(135deg, var(--success-green) 0%, #047857 100%); }
+        .hero-box.orange { background: linear-gradient(135deg, var(--warning-orange) 0%, #B45309 100%); }
+        .hero-box .metric-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 14px; }
+        .hero-metric { background: rgba(255,255,255,0.15); padding: 12px; border-radius: 8px; text-align: center; }
+        .hero-metric .amount { font-size: 20px; font-weight: bold; }
+        .hero-metric .label { font-size: 10px; text-transform: uppercase; opacity: 0.9; margin-top: 4px; }
+        .chart-container { background: var(--card-bg); border-radius: 12px; padding: 18px; border: 1px solid var(--border-color); height: 220px; position: relative; }
+        .output-card { background-color: var(--card-bg); border-radius: 12px; padding: 18px 22px; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .output-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; border-bottom: 1px dashed #E2E8F0; padding-bottom: 7px; align-items: center; }
+        .output-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .output-val { font-weight: 700; color: var(--primary-navy); font-size: 13px; }
+        .output-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-top: 12px; margin-bottom: 8px; letter-spacing: 0.04em; }
+        .output-section-title:first-child { margin-top: 0; }
+        .flag-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); padding: 5px 0; border-bottom: 1px solid #F1F5F9; }
+        .flag-item:last-child { border-bottom: none; }
+        .flag-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .action-btn { width: 100%; padding: 16px; background: var(--teal); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.3s; box-shadow: 0 4px 12px rgba(0,191,166,0.3); display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .action-btn:hover { background: #009E89; transform: translateY(-1px); }
+        .slider-group { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .slider-group label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; min-width: 0; flex: 1; }
+        input[type="range"] { flex: 2; accent-color: var(--teal); }
+        .slider-val { font-weight: bold; color: var(--teal); font-size: 16px; min-width: 45px; text-align: right; }
+        .divider { border-top: 1px dashed var(--border-color); padding-top: 14px; margin-top: 14px; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-content { background: white; padding: 28px; border-radius: 12px; width: 420px; max-width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .modal-content h3 { margin-top: 0; color: var(--primary-navy); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .modal-content .form-group { margin-bottom: 12px; }
+        .modal-close { background: var(--primary-navy); color: white; border: none; padding: 10px; width: 100%; border-radius: 6px; margin-top: 16px; cursor: pointer; font-weight: bold; }
+        @media (max-width: 1100px) { .container { flex-direction: column; padding: 20px; } .right-panel .sticky-panel { position: static; } .hero-box .metric-grid { grid-template-columns: 1fr 1fr; } }
+    </style>
+</head>
+<body>
+
+<header>
+    <div><h1>INNOVIOR <span>| Contact Centre Platform Sizer</span></h1></div>
+    <div class="header-actions">
+        <button onclick="document.getElementById('settingsModal').style.display='flex'">&#9881;&#65039; Assumptions &amp; Rates</button>
+    </div>
+</header>
+
+<div class="container">
+    <div class="left-panel">
+
+        <div class="section-card green">
+            <h2>1. Contact Volumes &amp; Demand <span class="badge">CORE</span></h2>
+            <div class="form-grid">
+                <div class="form-group"><label>Voice Inbound (monthly)</label><input type="number" id="volVoiceIn" value="50000" step="1000" oninput="calc()"></div>
+                <div class="form-group"><label>Voice Outbound</label><input type="number" id="volVoiceOut" value="5000" step="1000" oninput="calc()"></div>
+                <div class="form-group"><label>Email / Webform</label><input type="number" id="volEmail" value="15000" step="1000" oninput="calc()"></div>
+                <div class="form-group"><label>Web Chat</label><input type="number" id="volChat" value="10000" step="1000" oninput="calc()"></div>
+                <div class="form-group"><label>Social (all platforms)</label><input type="number" id="volSocial" value="3000" step="500" oninput="calc()"></div>
+                <div class="form-group"><label>SMS / Messaging</label><input type="number" id="volSMS" value="2000" step="500" oninput="calc()"></div>
+                <div class="form-group"><label>Back-office / Offline</label><input type="number" id="volBackoffice" value="5000" step="500" oninput="calc()"></div>
+                <div class="form-group"><label>Current Cost Per Contact ($)</label><input type="number" id="cpc" value="12.50" step="0.50" oninput="calc()"></div>
+            </div>
+            <div class="divider"></div>
+            <div class="form-grid">
+                <div class="form-group"><label>Peak Hour Factor (%)</label><select id="peakFactor" onchange="calc()"><option value="8">8% &#8212; Flat demand</option><option value="10">10% &#8212; Mild peaks</option><option value="12" selected>12% &#8212; Typical</option><option value="15">15% &#8212; Pronounced</option><option value="20">20% &#8212; Spiky</option></select><div class="sub-label">% of daily volume in busiest hour</div></div>
+                <div class="form-group"><label>Seasonality Surge</label><select id="surge" onchange="calc()"><option value="1.0">1.0x &#8212; None</option><option value="1.2">1.2x &#8212; Mild</option><option value="1.3" selected>1.3x &#8212; Moderate</option><option value="1.5">1.5x &#8212; Strong</option><option value="2.0">2.0x &#8212; Extreme</option></select><div class="sub-label">Peak month vs average</div></div>
+                <div class="form-group"><label>Annual Volume Growth</label><select id="growth" onchange="calc()"><option value="0">0%</option><option value="5" selected>5%</option><option value="10">10%</option><option value="15">15%</option><option value="20">20%</option></select></div>
+            </div>
+        </div>
+
+        <div class="section-card teal">
+            <h2>2. Channel &amp; Voice Configuration</h2>
+            <div class="form-grid">
+                <div class="form-group"><label>PSTN / Telephony Model</label><select id="pstnModel" onchange="calc()"><option value="cloud">Cloud PSTN</option><option value="byoc">BYOC</option><option value="hybrid">Hybrid</option></select><div class="sub-label">Drives SIP/trunk sizing</div></div>
+                <div class="form-group"><label>DID / DDI Numbers</label><input type="number" id="didCount" value="20" min="1" oninput="calc()"></div>
+                <div class="form-group"><label>Toll-free Numbers</label><input type="number" id="tollfreeCount" value="5" min="0" oninput="calc()"></div>
+                <div class="form-group"><label>IVR Menu Trees</label><input type="number" id="ivrMenus" value="6" min="0" oninput="calc()"><div class="sub-label">Each adds config effort</div></div>
+                <div class="form-group"><label>IVR Self-service Txns</label><input type="number" id="ivrSelfServe" value="2" min="0" oninput="calc()"><div class="sub-label">Payment, balance, booking</div></div>
+                <div class="form-group"><label>Outbound Dialler</label><select id="dialler" onchange="calc()"><option value="none">None</option><option value="preview">Preview</option><option value="progressive">Progressive</option><option value="predictive">Predictive</option></select></div>
+                <div class="form-group"><label>Languages</label><input type="number" id="languages" value="1" min="1" oninput="calc()"><div class="sub-label">Multiplies IVR/bot effort</div></div>
+                <div class="form-group"><label>Chat Concurrency / Agent</label><select id="chatConcurrency" onchange="calc()"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option></select></div>
+            </div>
+        </div>
+
+        <div class="section-card orange">
+            <h2>3. Interaction Complexity &amp; Routing</h2>
+            <div class="form-grid">
+                <div class="form-group"><label>Simple Workflows (FAQ)</label><input type="number" id="wfSimple" value="10" min="0" oninput="calc()"><div class="sub-label">AHT ~180s voice</div></div>
+                <div class="form-group"><label>Transactional (CRM)</label><input type="number" id="wfTrans" value="5" min="0" oninput="calc()"><div class="sub-label">AHT ~360s voice</div></div>
+                <div class="form-group"><label>Complex (ERP/PCI/Esc)</label><input type="number" id="wfComplex" value="2" min="0" oninput="calc()"><div class="sub-label">AHT ~600s voice</div></div>
+            </div>
+            <div class="divider"></div>
+            <div class="form-grid">
+                <div class="form-group"><label>Queues / Skill Groups</label><input type="number" id="queueCount" value="12" min="1" oninput="calc()"></div>
+                <div class="form-group"><label>Routing Complexity</label><select id="routingCx" onchange="calc()"><option value="simple">Simple (single skill)</option><option value="multi" selected>Multi-skill</option><option value="proficiency">Proficiency-based</option><option value="ai">AI-driven routing</option></select><div class="sub-label">Higher = more effort</div></div>
+                <div class="form-group"><label>Priority / VIP Routing</label><select id="priorityRouting" onchange="calc()"><option value="none">None</option><option value="basic" selected>Basic (1-2 tiers)</option><option value="advanced">Advanced (segment)</option></select></div>
+                <div class="form-group"><label>Callback in Queue</label><select id="callback" onchange="calc()"><option value="no">No</option><option value="yes" selected>Yes</option></select></div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <h2>4. AI &amp; Automation Strategy <span class="badge">SIZING DRIVER</span></h2>
+            <div class="slider-group"><label>AI Deflection Target</label><input type="range" id="deflection" min="0" max="60" value="25" oninput="updSlider(this,'deflectionVal','%'); calc()"><span class="slider-val" id="deflectionVal">25%</span></div>
+            <div class="slider-group"><label>IVR Containment Rate</label><input type="range" id="ivrContain" min="0" max="50" value="15" oninput="updSlider(this,'ivrContainVal','%'); calc()"><span class="slider-val" id="ivrContainVal">15%</span></div>
+            <div class="tile-grid" style="margin-top: 14px;">
+                <label class="tile"><input type="checkbox" id="aiAgentforce" checked onchange="calc()"><div class="tile-title">Agentforce</div><div class="tile-desc">AI agent &#8212; resolves contacts autonomously.</div></label>
+                <label class="tile"><input type="checkbox" id="aiCopilot" checked onchange="calc()"><div class="tile-title">Einstein Copilot</div><div class="tile-desc">Agent assist, auto-summary, next-best-action.</div></label>
+                <label class="tile"><input type="checkbox" id="aiChatbot" onchange="calc()"><div class="tile-title">Chatbot</div><div class="tile-desc">Web/messaging deflection.</div></label>
+                <label class="tile"><input type="checkbox" id="aiVoicebot" onchange="calc()"><div class="tile-title">Voicebot / IVR NLU</div><div class="tile-desc">Speech-driven IVR with NLU.</div></label>
+                <label class="tile"><input type="checkbox" id="aiSentiment" onchange="calc()"><div class="tile-title">Sentiment Analysis</div><div class="tile-desc">Real-time emotion detection.</div></label>
+                <label class="tile"><input type="checkbox" id="aiKB" onchange="calc()"><div class="tile-title">AI Knowledge Search</div><div class="tile-desc">Semantic knowledge base search.</div></label>
+            </div>
+        </div>
+
+        <div class="section-card sf">
+            <h2>5. Salesforce &amp; Platform Components</h2>
+            <div class="tile-grid">
+                <label class="tile"><input type="checkbox" id="sfDataCloud" checked onchange="calc()"><div class="tile-title">Data Cloud</div><div class="tile-desc">CTI streaming, profile unification.</div></label>
+                <label class="tile"><input type="checkbox" id="sfFieldService" onchange="calc()"><div class="tile-title">Field Service</div><div class="tile-desc">Mobile dispatching, work orders.</div></label>
+                <label class="tile"><input type="checkbox" id="sfOmniStudio" onchange="calc()"><div class="tile-title">OmniStudio</div><div class="tile-desc">Guided UI flows &#8212; reduces AHT ~10%.</div></label>
+                <label class="tile"><input type="checkbox" id="sfExpCloud" onchange="calc()"><div class="tile-title">Experience Cloud</div><div class="tile-desc">Customer portal / self-service.</div></label>
+            </div>
+            <div class="divider"></div>
+            <div class="form-grid">
+                <div class="form-group"><label>Third-party Integrations</label><input type="number" id="integCount" value="4" min="0" oninput="calc()"><div class="sub-label">LOB apps, payment, WFM</div></div>
+                <div class="form-group"><label>API Maturity</label><select id="apiMat" onchange="calc()"><option value="modern">Modern REST/GraphQL</option><option value="mixed" selected>Mixed (some legacy)</option><option value="legacy">Mostly legacy/batch</option></select><div class="sub-label">Legacy = middleware needed</div></div>
+                <div class="form-group"><label>Screen Pop Complexity</label><select id="screenPop" onchange="calc()"><option value="none">None</option><option value="basic">Basic (single object)</option><option value="advanced" selected>Advanced (multi-object)</option></select></div>
+            </div>
+        </div>
+
+        <div class="section-card dark">
+            <h2>6. Compliance, Recording &amp; Environments</h2>
+            <div class="form-grid">
+                <div class="form-group"><label>Call Recording</label><select id="recording" onchange="calc()"><option value="none">None</option><option value="full" selected>100% recording</option><option value="partial">Selective</option></select></div>
+                <div class="form-group"><label>Retention (months)</label><input type="number" id="retention" value="24" min="0" oninput="calc()"></div>
+                <div class="form-group"><label>PCI Compliance</label><select id="pciScope" onchange="calc()"><option value="none" selected>Not in scope</option><option value="manual">Manual pause/resume</option><option value="auto">Auto-pause (DTMF)</option></select></div>
+                <div class="form-group"><label>Data Sovereignty</label><select id="dataSov" onchange="calc()"><option value="au" selected>Australia only</option><option value="apac">APAC</option><option value="global">Global</option></select></div>
+                <div class="form-group"><label>Environments</label><select id="envCount" onchange="calc()"><option value="2" selected>2 (Prod + UAT)</option><option value="3">3 (+ Dev)</option><option value="4">4 (+ Staging)</option><option value="5">5 (+ Training/DR)</option></select></div>
+                <div class="form-group"><label>Business Units</label><input type="number" id="busUnits" value="1" min="1" oninput="calc()"></div>
+                <div class="form-group"><label>Sites / Locations</label><input type="number" id="sites" value="2" min="1" oninput="calc()"></div>
+                <div class="form-group"><label>Countries</label><input type="number" id="countries" value="1" min="1" oninput="calc()"></div>
+            </div>
+        </div>
+
+        <div class="toggle-card probe"><div class="info"><h3>Probe Group BPO Synergy</h3><p>Outsource remaining human interactions to Probe at blended offshore rate.</p></div><label class="switch"><input type="checkbox" id="probeToggle" onchange="calc()"><span class="slider-sw"></span></label></div>
+        <div class="toggle-card osp"><div class="info"><h3>Innovior OSP Bundle (3-Year)</h3><p>Convert CAPEX build into predictable monthly OPEX (+12% risk premium).</p></div><label class="switch"><input type="checkbox" id="ospToggle" onchange="calc()"><span class="slider-sw"></span></label></div>
+
+    </div>
+
+    <div class="right-panel">
+        <div class="sticky-panel">
+            <div class="hero-box green" id="heroBox">
+                <div style="font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9;">Monthly Net Savings</div>
+                <div style="font-size: 26px; font-weight: bold; margin-top: 4px;" id="outSavings">$0</div>
+                <div class="metric-grid">
+                    <div class="hero-metric"><div class="amount" id="outPayback">&#8212;</div><div class="label" id="lblPayback">Capex Payback</div></div>
+                    <div class="hero-metric"><div class="amount" id="outDeflected">0</div><div class="label">Contacts Deflected</div></div>
+                    <div class="hero-metric"><div class="amount" id="outSIP">0</div><div class="label">SIP Channels</div></div>
+                </div>
+            </div>
+            <div class="chart-container"><canvas id="roiChart"></canvas></div>
+            <div class="output-card">
+                <h2 style="font-size:14px; margin-bottom: 10px;">&#128208; Platform Sizing</h2>
+                <div class="output-section-title">Voice &amp; Telephony</div>
+                <div class="output-row"><div>Peak Concurrent Voice</div><span class="output-val" id="outConcurrent">&#8212;</span></div>
+                <div class="output-row"><div>SIP / PSTN Channels</div><span class="output-val" id="outSIPDetail">&#8212;</span></div>
+                <div class="output-row"><div>IVR Ports (peak)</div><span class="output-val" id="outIVR">&#8212;</span></div>
+                <div class="output-row"><div>Recording Storage</div><span class="output-val" id="outStorage">&#8212;</span></div>
+                <div class="output-section-title">Volumes (Post-Deflection)</div>
+                <div class="output-row"><div>Voice to Agent (monthly)</div><span class="output-val" id="outVoiceAgent">&#8212;</span></div>
+                <div class="output-row"><div>Chat to Agent (monthly)</div><span class="output-val" id="outChatAgent">&#8212;</span></div>
+                <div class="output-row"><div>Total Human Contacts</div><span class="output-val" id="outHumanTotal">&#8212;</span></div>
+                <div class="output-row"><div>Bot/AI Handled</div><span class="output-val" id="outBotTotal">&#8212;</span></div>
+            </div>
+            <div class="output-card">
+                <h2 style="font-size:14px; margin-bottom: 10px;">&#128197; Implementation Estimate</h2>
+                <div class="output-row"><div>Build Duration</div><span class="output-val" id="outWeeks">&#8212;</span></div>
+                <div class="output-row"><div>Client SME Time</div><span class="output-val" id="outSME">&#8212;</span></div>
+                <div class="output-row"><div>Implementation CAPEX</div><span class="output-val" id="outCAPEX">&#8212;</span></div>
+                <div class="output-row"><div>Monthly Platform OPEX</div><span class="output-val" id="outOPEX">&#8212;</span></div>
+            </div>
+            <div class="output-card" id="flagsCard"><h2 style="font-size:14px; margin-bottom: 10px;">&#9888;&#65039; Complexity Flags</h2><div id="flagsContainer"></div></div>
+            <button class="action-btn" onclick="copyExecSummary()">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Generate Executive Summary
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="settingsModal">
+    <div class="modal-content">
+        <h3>&#9881;&#65039; Delivery &amp; Commercial Assumptions</h3>
+        <div class="form-group"><label>Innovior Blended Rate ($/hr)</label><input type="number" id="setRate" value="235" oninput="calc()"></div>
+        <div class="form-group"><label>Copilot AHT Reduction (%)</label><input type="number" id="setCopilotAHT" value="15" oninput="calc()"></div>
+        <div class="form-group"><label>Risk Contingency (%)</label><input type="number" id="setRisk" value="10" oninput="calc()"></div>
+        <div class="form-group"><label>Probe BPO CPC ($)</label><input type="number" step="0.5" id="setProbeCPC" value="8.50" oninput="calc()"></div>
+        <div class="form-group"><label>Dev Pod Size (people)</label><input type="number" id="setPodSize" value="2.5" step="0.5" oninput="calc()"></div>
+        <div class="form-group"><label>SF License Base ($/agent/mo)</label><input type="number" id="setLicBase" value="180" oninput="calc()"></div>
+        <div class="form-group"><label>Agentforce $/conversation</label><input type="number" id="setAFPrice" value="2.50" step="0.25" oninput="calc()"></div>
+        <button class="modal-close" onclick="document.getElementById('settingsModal').style.display='none'">Apply &amp; Close</button>
+    </div>
+</div>
+
+<script>
+var fmt = new Intl.NumberFormat('en-AU', { style:'currency', currency:'AUD', maximumFractionDigits:0 });
+var chartInst = null;
+var G = {};
+
+function updSlider(el, valId, suffix) { document.getElementById(valId).textContent = el.value + suffix; }
+function v(id) { return parseFloat(document.getElementById(id) && document.getElementById(id).value) || 0; }
+function sel(id) { return (document.getElementById(id) && document.getElementById(id).value) || ''; }
+function chk(id) { return (document.getElementById(id) && document.getElementById(id).checked) || false; }
+
+function calc() {
+    var vIn = v('volVoiceIn'), vOut = v('volVoiceOut'), vEm = v('volEmail'), vCh = v('volChat'), vSo = v('volSocial'), vSm = v('volSMS'), vBo = v('volBackoffice');
+    var totalVol = vIn + vOut + vEm + vCh + vSo + vSm + vBo;
+    var cpc = v('cpc') || 12.50;
+    var peakFactor = v('peakFactor') / 100;
+    var surge = parseFloat(sel('surge'));
+    var growth = v('growth') / 100;
+
+    var deflRate = v('deflection') / 100;
+    var ivrContain = v('ivrContain') / 100;
+    var voicePostIVR = vIn * (1 - ivrContain);
+    var chatPostBot = vCh * (1 - (chk('aiChatbot') ? deflRate * 0.6 : 0));
+    var botHandled = Math.round(totalVol * deflRate);
+    var humanTotal = totalVol - botHandled;
+    var voiceToAgent = Math.round(voicePostIVR * (1 - deflRate * 0.3));
+    var chatToAgent = Math.round(chatPostBot * (1 - deflRate * 0.4));
+
+    var wfS = v('wfSimple'), wfT = v('wfTrans'), wfC = v('wfComplex');
+    var totalWF = wfS + wfT + wfC || 1;
+    var voiceAHT = ((wfS * 180) + (wfT * 360) + (wfC * 600)) / totalWF;
+    var dailyVoice = (voiceToAgent + vOut) * surge / 22;
+    var peakHourVoice = dailyVoice * peakFactor;
+    var concurrent = Math.ceil(peakHourVoice * (voiceAHT / 3600) * 1.15);
+    var sipChannels = Math.ceil(concurrent * 1.2);
+    var ivrPorts = Math.ceil((vIn * surge / 22) * peakFactor * (45 / 3600) * 1.3);
+
+    var recMins = (sel('recording') === 'none' ? 0 : (voiceToAgent + vOut)) * (voiceAHT / 60);
+    var recGBperMo = recMins * 0.5 / 1024;
+    var retention = v('retention');
+    var totalRecGB = recGBperMo * retention;
+    var storageStr = totalRecGB < 1000 ? Math.round(totalRecGB) + ' GB' : (totalRecGB / 1024).toFixed(1) + ' TB';
+
+    var rate = v('setRate') || 235;
+    var riskBuf = v('setRisk') / 100;
+    var podSize = v('setPodSize') || 2.5;
+
+    var hrsBase = 140 + (wfS * 4) + (wfT * 10) + (wfC * 20);
+    var routeMult = { simple: 1.0, multi: 1.1, proficiency: 1.25, ai: 1.5 }[sel('routingCx')] || 1;
+    hrsBase *= routeMult;
+    hrsBase += v('queueCount') * 3;
+    hrsBase += v('ivrMenus') * 12 + v('ivrSelfServe') * 40;
+    if (sel('callback') === 'yes') hrsBase += 24;
+    hrsBase *= (1 + (v('languages') - 1) * 0.3);
+    if (sel('dialler') === 'preview') hrsBase += 40;
+    if (sel('dialler') === 'progressive') hrsBase += 80;
+    if (sel('dialler') === 'predictive') hrsBase += 160;
+    if (sel('priorityRouting') === 'basic') hrsBase += 16;
+    if (sel('priorityRouting') === 'advanced') hrsBase += 48;
+    if (sel('screenPop') === 'basic') hrsBase += 16;
+    if (sel('screenPop') === 'advanced') hrsBase += 40;
+    var integMult = { modern: 24, mixed: 40, legacy: 64 }[sel('apiMat')] || 40;
+    hrsBase += v('integCount') * integMult;
+    if (sel('pciScope') === 'manual') hrsBase += 40;
+    if (sel('pciScope') === 'auto') hrsBase += 80;
+    hrsBase += Math.max(0, (parseInt(sel('envCount')) - 2)) * 24;
+    hrsBase *= (1 + (v('busUnits') - 1) * 0.15);
+    hrsBase *= (1 + (v('countries') - 1) * 0.25);
+
+    var hrsAI = 0;
+    if (chk('aiAgentforce')) hrsAI += (wfS * 12) + (wfT * 24) + (wfC * 32);
+    if (chk('aiCopilot')) hrsAI += 40 + (wfT * 8) + (wfC * 16);
+    if (chk('aiChatbot')) hrsAI += 60 + (wfS * 8) + (wfT * 16);
+    if (chk('aiVoicebot')) hrsAI += 120 + (v('ivrMenus') * 20);
+    if (chk('aiSentiment')) hrsAI += 40;
+    if (chk('aiKB')) hrsAI += 60;
+    if (chk('sfDataCloud')) hrsAI += 200;
+    if (chk('sfFieldService')) hrsAI += 320;
+    if (chk('sfOmniStudio')) hrsAI += (wfT * 16) + (wfC * 32);
+    if (chk('sfExpCloud')) hrsAI += 240;
+
+    var totalHours = (hrsBase + hrsAI) * (1 + riskBuf);
+    var capex = totalHours * rate;
+    var buildWeeks = Math.ceil(totalHours / (podSize * 30)) + 4;
+    var smeHours = Math.round(totalHours * 0.15);
+
+    var isOSP = chk('ospToggle');
+    var isProbe = chk('probeToggle');
+    var amortized = 0;
+    if (isOSP) amortized = (capex * 1.12) / 36;
+
+    var licBase = v('setLicBase') || 180;
+    var afPrice = v('setAFPrice') || 2.50;
+    var agents = Math.ceil(humanTotal / (22 * 8 * 0.75 / (voiceAHT / 60)));
+    var licPerAgent = licBase;
+    if (chk('sfFieldService')) licPerAgent += 75;
+    if (chk('sfOmniStudio')) licPerAgent += 40;
+    if (chk('sfExpCloud')) licPerAgent += 25;
+    var monthlyLic = Math.max(agents, 10) * licPerAgent;
+
+    var monthlyAI = 0;
+    if (chk('aiAgentforce')) monthlyAI += botHandled * afPrice;
+    if (chk('aiCopilot')) monthlyAI += totalVol * 0.25;
+    if (chk('sfDataCloud')) monthlyAI += 2500;
+
+    var techOpex = monthlyLic + monthlyAI + amortized;
+
+    var currentCost = totalVol * cpc;
+    var usedCPC = cpc;
+    if (isProbe) usedCPC = v('setProbeCPC') || 8.50;
+    if (chk('aiCopilot')) usedCPC *= (1 - (v('setCopilotAHT') / 100));
+    if (chk('sfOmniStudio')) usedCPC *= 0.90;
+    var futureHumanCost = humanTotal * usedCPC;
+    var totalFutureCost = futureHumanCost + techOpex;
+    var monthlySavings = currentCost - totalFutureCost;
+
+    var activeChannels = [];
+    if (vIn > 0 || vOut > 0) activeChannels.push('Voice');
+    if (vEm > 0) activeChannels.push('Email');
+    if (vCh > 0) activeChannels.push('Web Chat');
+    if (vSo > 0) activeChannels.push('Social');
+    if (vSm > 0) activeChannels.push('SMS');
+    if (vBo > 0) activeChannels.push('Back-office');
+    var activeAI = [];
+    if (chk('aiAgentforce')) activeAI.push('Agentforce');
+    if (chk('aiCopilot')) activeAI.push('Einstein Copilot');
+    if (chk('aiChatbot')) activeAI.push('Chatbot');
+    if (chk('aiVoicebot')) activeAI.push('Voicebot / NLU');
+    if (chk('aiSentiment')) activeAI.push('Sentiment Analysis');
+    if (chk('aiKB')) activeAI.push('AI Knowledge Search');
+    var activeSF = [];
+    if (chk('sfDataCloud')) activeSF.push('Data Cloud');
+    if (chk('sfFieldService')) activeSF.push('Field Service');
+    if (chk('sfOmniStudio')) activeSF.push('OmniStudio');
+    if (chk('sfExpCloud')) activeSF.push('Experience Cloud');
+
+    G = {
+        botHandled:botHandled, monthlySavings:monthlySavings, annualSavings:monthlySavings*12, capex:capex,
+        isOSP:isOSP, isProbe:isProbe, buildWeeks:buildWeeks, smeHours:smeHours, techOpex:techOpex,
+        futureHumanCost:futureHumanCost, currentCost:currentCost, sipChannels:sipChannels,
+        concurrent:concurrent, ivrPorts:ivrPorts, totalRecGB:totalRecGB, humanTotal:humanTotal,
+        totalVol:totalVol, totalHours:totalHours, voiceToAgent:voiceToAgent, chatToAgent:chatToAgent,
+        voiceAHT:voiceAHT, deflPct:Math.round(deflRate*100), ivrContainPct:Math.round(ivrContain*100),
+        storageDisplay: sel('recording')==='none'?'N/A':storageStr, retention:retention,
+        y2Vol:Math.ceil(totalVol*(1+growth)), monthlyLic:monthlyLic, monthlyAI:monthlyAI,
+        amortized:amortized, agents:agents, activeChannels:activeChannels, activeAI:activeAI,
+        activeSF:activeSF, vIn:vIn, vOut:vOut, vEm:vEm, vCh:vCh, vSo:vSo, vSm:vSm, vBo:vBo,
+        queueCount:v('queueCount'), integCount:v('integCount'), routingCx:sel('routingCx'),
+        pstnModel:sel('pstnModel'), recording:sel('recording'), pciScope:sel('pciScope'),
+        dataSov:sel('dataSov'), envCount:sel('envCount'), busUnits:v('busUnits'),
+        countries:v('countries'), sites:v('sites'), languages:v('languages'),
+        dialler:sel('dialler'), growth:growth
+    };
+
+    var heroBox = document.getElementById('heroBox');
+    if (monthlySavings > 0) {
+        document.getElementById('outSavings').textContent = fmt.format(monthlySavings);
+        heroBox.className = 'hero-box green';
+        if (isOSP) { document.getElementById('outPayback').textContent = 'Cash Pos.'; document.getElementById('lblPayback').textContent = 'Day-1 Cash Flow'; }
+        else { document.getElementById('outPayback').textContent = (capex / monthlySavings).toFixed(1) + ' Mo'; document.getElementById('lblPayback').textContent = 'Capex Payback'; }
+    } else {
+        document.getElementById('outSavings').textContent = 'Negative';
+        heroBox.className = 'hero-box orange';
+        document.getElementById('outPayback').textContent = 'No ROI';
+        document.getElementById('lblPayback').textContent = 'Review Inputs';
+    }
+    document.getElementById('outDeflected').textContent = botHandled.toLocaleString();
+    document.getElementById('outSIP').textContent = sipChannels;
+    document.getElementById('outConcurrent').textContent = concurrent;
+    document.getElementById('outSIPDetail').textContent = sipChannels + ' (+20% headroom)';
+    document.getElementById('outIVR').textContent = ivrPorts;
+    document.getElementById('outStorage').textContent = sel('recording') === 'none' ? 'N/A' : storageStr;
+    document.getElementById('outVoiceAgent').textContent = voiceToAgent.toLocaleString();
+    document.getElementById('outChatAgent').textContent = chatToAgent.toLocaleString();
+    document.getElementById('outHumanTotal').textContent = humanTotal.toLocaleString();
+    document.getElementById('outBotTotal').textContent = botHandled.toLocaleString();
+    document.getElementById('outWeeks').textContent = buildWeeks + ' Weeks';
+    document.getElementById('outSME').textContent = smeHours + ' Hours';
+    document.getElementById('outCAPEX').textContent = isOSP ? '$0 (OSP)' : fmt.format(capex);
+    document.getElementById('outOPEX').textContent = fmt.format(techOpex) + '/mo';
+
+    buildFlags();
+    renderChart(currentCost, totalFutureCost, capex, isOSP);
+}
+
+function buildFlags() {
+    var fl = [];
+    if (sel('routingCx') === 'ai') fl.push(['#EF4444', 'AI-driven routing']);
+    if (sel('routingCx') === 'proficiency') fl.push(['#F59E0B', 'Proficiency routing']);
+    if (v('integCount') > 5) fl.push(['#F59E0B', 'High integration count (' + v('integCount') + ')']);
+    if (sel('apiMat') === 'legacy') fl.push(['#EF4444', 'Legacy APIs &#8212; middleware needed']);
+    if (sel('pciScope') !== 'none') fl.push(['#F59E0B', 'PCI-DSS in scope']);
+    if (parseInt(sel('envCount')) > 3) fl.push(['#F59E0B', sel('envCount') + ' environments']);
+    if (v('languages') > 1) fl.push(['#F59E0B', 'Multi-language (' + v('languages') + ')']);
+    if (v('busUnits') > 1) fl.push(['#F59E0B', 'Multi-BU (' + v('busUnits') + ')']);
+    if (v('countries') > 1) fl.push(['#EF4444', 'Multi-country (' + v('countries') + ')']);
+    if (G.totalVol > 200000) fl.push(['#EF4444', 'High volume']);
+    if (sel('dialler') === 'predictive') fl.push(['#F59E0B', 'Predictive dialler']);
+    if (chk('sfDataCloud')) fl.push(['#A78BFA', 'Data Cloud']);
+    if (chk('aiAgentforce')) fl.push(['#A78BFA', 'Agentforce']);
+    if (chk('aiVoicebot')) fl.push(['#A78BFA', 'Voicebot NLU']);
+    if (G.concurrent > 100) fl.push(['#F59E0B', 'High concurrent (' + G.concurrent + ')']);
+    if (fl.length === 0) fl.push(['#10B981', 'No major flags']);
+    document.getElementById('flagsContainer').innerHTML = fl.map(function(f){ return '<div class="flag-item"><span class="flag-dot" style="background:'+f[0]+'"></span>'+f[1]+'</div>'; }).join('');
+}
+
+function renderChart(currentMo, futureMo, capex, isOSP) {
+    var ctx = document.getElementById('roiChart').getContext('2d');
+    if (chartInst) chartInst.destroy();
+    var labels = [], cur = [], inn = [];
+    for (var m = 0; m <= 36; m += 3) { labels.push('M' + m); cur.push(m * currentMo); inn.push((isOSP ? 0 : capex) + m * futureMo); }
+    chartInst = new Chart(ctx, {
+        type: 'line', data: { labels: labels, datasets: [
+            { label: 'Status Quo', data: cur, borderColor: '#EF4444', borderDash: [5,5], fill: false, tension: 0.1 },
+            { label: 'Innovior Target', data: inn, borderColor: '#00BFA6', backgroundColor: 'rgba(0,191,166,0.08)', borderWidth: 3, fill: true, tension: 0.1 }
+        ]},
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { size: 10 } } } }, scales: { y: { ticks: { callback: function(v) { return '$' + (v/1000) + 'k'; }, font: { size: 10 } } }, x: { ticks: { font: { size: 10 } } } } }
+    });
+}
+
+function copyExecSummary() {
+    var d = new Date().toLocaleDateString('en-AU', { day:'numeric', month:'long', year:'numeric' });
+    var F = function(x){ return fmt.format(x); };
+    var N = function(x){ return (x||0).toLocaleString(); };
+    var payback = G.isOSP ? 'Day-1 Cash Positive (OSP)' : (G.monthlySavings > 0 ? (G.capex / G.monthlySavings).toFixed(1) + ' months' : 'N/A');
+    var savColor = G.monthlySavings > 0 ? '#10B981' : '#F59E0B';
+    var deflPctOfTotal = G.totalVol > 0 ? Math.round(G.botHandled / G.totalVol * 100) : 0;
+    var riskPct = Math.round(parseFloat(document.getElementById('setRisk').value) || 10);
+    var pstnLabel = {cloud:'Cloud PSTN',byoc:'BYOC',hybrid:'Hybrid'}[G.pstnModel] || G.pstnModel;
+
+    var flags = [];
+    if (G.routingCx === 'ai') flags.push('\ud83d\udd34 AI-driven routing');
+    if (G.routingCx === 'proficiency') flags.push('\ud83d\udfe0 Proficiency-based routing');
+    if (G.integCount > 5) flags.push('\ud83d\udfe0 High integration count (' + G.integCount + ')');
+    if (G.pciScope !== 'none') flags.push('\ud83d\udfe0 PCI-DSS compliance in scope');
+    if (G.languages > 1) flags.push('\ud83d\udfe0 Multi-language (' + G.languages + ')');
+    if (G.busUnits > 1) flags.push('\ud83d\udfe0 Multi-BU (' + G.busUnits + ')');
+    if (G.countries > 1) flags.push('\ud83d\udd34 Multi-country (' + G.countries + ')');
+    if (G.concurrent > 100) flags.push('\ud83d\udfe0 High concurrent voice (' + G.concurrent + ')');
+    if (G.dialler === 'predictive') flags.push('\ud83d\udfe0 Predictive dialler');
+    if (flags.length === 0) flags.push('\u2705 No major complexity flags');
+
+    var channelChips = G.activeChannels.map(function(c){ return '<span class="chip chip-teal">' + c + '</span>'; }).join('');
+    var aiChips = G.activeAI.length ? G.activeAI.map(function(c){ return '<span class="chip chip-purple">' + c + '</span>'; }).join('') : '<span style="font-size:12px;color:#94A3B8">None</span>';
+    var sfChips = G.activeSF.length ? G.activeSF.map(function(c){ return '<span class="chip chip-blue">' + c + '</span>'; }).join('') : '<span style="font-size:12px;color:#94A3B8">None</span>';
+    var flagRows = flags.map(function(fl){ return '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;color:#475569;border-bottom:1px solid #F1F5F9">' + fl + '</div>'; }).join('');
+
+    var ospTag = G.isOSP ? '<div style="display:inline-block;background:rgba(0,191,166,.15);color:#00BFA6;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-top:12px;margin-right:8px">OSP MODEL</div>' : '';
+    var probeTag = G.isProbe ? '<div style="display:inline-block;background:rgba(124,58,237,.15);color:#A78BFA;padding:3px 12px;border-radius:12px;font-size:11px;font-weight:700;margin-top:12px">PROBE BPO</div>' : '';
+    var capexCell = G.isOSP ? '<s style="color:#94A3B8">' + F(G.capex) + '</s> $0 (OSP)' : F(G.capex);
+    var ospAmortRow = G.isOSP ? '<tr><td style="padding:10px 14px;border-bottom:1px solid #F1F5F9;font-weight:500">&nbsp;&nbsp;\u21b3 OSP Amortised (+12%)</td><td style="padding:10px 14px;border-bottom:1px solid #F1F5F9;text-align:right;font-weight:700;color:#0B1D3A">' + F(G.amortized) + '/mo</td></tr>' : '';
+
+    var h = [];
+    h.push('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">');
+    h.push('<title>Innovior - CC Platform Sizing</title>');
+    h.push('<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">');
+    h.push('<style>');
+    h.push('*{margin:0;padding:0;box-sizing:border-box}');
+    h.push('body{font-family:"Plus Jakarta Sans","Segoe UI",sans-serif;color:#1E293B;background:#F8FAFC}');
+    h.push('@media print{body{background:#fff}.pg{box-shadow:none!important;margin:0!important;max-width:none!important;border-radius:0!important}.np{display:none!important}@page{margin:15mm}}');
+    h.push('.pg{max-width:860px;margin:30px auto;background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.08);overflow:hidden}');
+    h.push('.hd{background:linear-gradient(135deg,#0B1D3A,#162D50);color:#fff;padding:36px 44px 32px}');
+    h.push('.hd-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}');
+    h.push('.logo{font-size:22px;font-weight:800;letter-spacing:-.03em}.logo b{color:#00BFA6}');
+    h.push('.dt{font-size:11px;color:rgba(255,255,255,.5);text-align:right}.dt strong{color:rgba(255,255,255,.8);display:block;font-size:12px}');
+    h.push('.ttl{font-size:26px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px}');
+    h.push('.sub{font-size:13px;color:rgba(255,255,255,.6)}');
+    h.push('.ks{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#E2E8F0}');
+    h.push('.kc{background:#fff;padding:22px 24px;text-align:center}');
+    h.push('.kv{font-size:28px;font-weight:800;letter-spacing:-.03em}');
+    h.push('.kl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#94A3B8;margin-top:4px}');
+    h.push('.ksub{font-size:10px;color:#CBD5E1;margin-top:2px}');
+    h.push('.bd{padding:36px 44px}');
+    h.push('.sec{margin-bottom:32px}');
+    h.push('.st{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#0B1D3A;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #0B1D3A}');
+    h.push('table{width:100%;border-collapse:collapse;font-size:13px}');
+    h.push('th{text-align:left;padding:8px 14px;background:#F8FAFC;border-bottom:1px solid #E2E8F0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#94A3B8}');
+    h.push('th:last-child{text-align:right}');
+    h.push('td{padding:10px 14px;border-bottom:1px solid #F1F5F9;font-weight:500}');
+    h.push('td:last-child{text-align:right;font-weight:700;color:#0B1D3A}');
+    h.push('tr.hl td{background:#F0FDF4}');
+    h.push('tr.tot td{border-top:2px solid #E2E8F0;font-weight:800;font-size:14px;background:#F8FAFC}');
+    h.push('.cl{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}');
+    h.push('.chip{display:inline-block;padding:4px 14px;border-radius:16px;font-size:12px;font-weight:600}');
+    h.push('.chip-teal{background:#ECFDF5;color:#059669;border:1px solid #A7F3D0}');
+    h.push('.chip-blue{background:#EFF6FF;color:#2563EB;border:1px solid #BFDBFE}');
+    h.push('.chip-purple{background:#F5F3FF;color:#7C3AED;border:1px solid #DDD6FE}');
+    h.push('.co{background:linear-gradient(135deg,#0B1D3A,#162D50);color:#fff;padding:24px 28px;border-radius:10px;margin-top:28px}');
+    h.push('.co h3{font-size:14px;font-weight:700;margin-bottom:6px;color:#00BFA6}');
+    h.push('.co p{font-size:12px;line-height:1.7;opacity:.85}');
+    h.push('.ft{padding:20px 44px;background:#F8FAFC;border-top:1px solid #E2E8F0;display:flex;justify-content:space-between;font-size:10px;color:#94A3B8}');
+    h.push('.ft strong{color:#64748B}');
+    h.push('.tb{max-width:860px;margin:20px auto 0;display:flex;gap:10px;justify-content:flex-end}');
+    h.push('.tb button{padding:10px 22px;border-radius:8px;border:none;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}');
+    h.push('.bp{background:#0B1D3A;color:#fff}.bc{background:#00BFA6;color:#fff}');
+    h.push('.ct{color:#00BFA6}.cg{color:#10B981}.cb{color:#0EA5E9}.cn{color:#0B1D3A}.co2{color:#F59E0B}');
+    h.push('</style></head><body>');
+
+    h.push('<div class="tb np"><button class="bp" onclick="window.print()">Print / Save PDF</button></div>');
+
+    h.push('<div class="pg">');
+    h.push('<div class="hd"><div class="hd-top"><div><div class="logo">INNOVIOR<b>.</b></div>');
+    h.push('<div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:2px">A Probe Group Company</div></div>');
+    h.push('<div class="dt"><strong>Prepared</strong>' + d + '</div></div>');
+    h.push('<div class="ttl">Contact Centre Platform Sizing</div>');
+    h.push('<div class="sub">Indicative solution sizing and commercial estimate</div>');
+    h.push(ospTag + probeTag + '</div>');
+
+    h.push('<div class="ks">');
+    h.push('<div class="kc"><div class="kv cg">' + F(G.monthlySavings) + '</div><div class="kl">Monthly Savings</div><div class="ksub">' + F(G.annualSavings) + ' annual</div></div>');
+    h.push('<div class="kc"><div class="kv cn">' + payback + '</div><div class="kl">' + (G.isOSP?'Commercial Model':'CAPEX Payback') + '</div></div>');
+    h.push('<div class="kc"><div class="kv ct">' + N(G.botHandled) + '</div><div class="kl">AI Deflected / Mo</div><div class="ksub">' + deflPctOfTotal + '% of volume</div></div>');
+    h.push('<div class="kc"><div class="kv cb">' + G.buildWeeks + ' Wks</div><div class="kl">Build Duration</div><div class="ksub">' + N(Math.round(G.totalHours)) + ' hrs</div></div>');
+    h.push('</div>');
+
+    h.push('<div class="bd">');
+
+    h.push('<div class="sec"><div class="st">Contact Volumes</div>');
+    h.push('<table><thead><tr><th>Channel</th><th>Monthly</th></tr></thead><tbody>');
+    h.push('<tr><td>Voice Inbound</td><td>' + N(G.vIn) + '</td></tr>');
+    h.push('<tr><td>Voice Outbound</td><td>' + N(G.vOut) + '</td></tr>');
+    h.push('<tr><td>Email</td><td>' + N(G.vEm) + '</td></tr>');
+    h.push('<tr><td>Web Chat</td><td>' + N(G.vCh) + '</td></tr>');
+    h.push('<tr><td>Social</td><td>' + N(G.vSo) + '</td></tr>');
+    h.push('<tr><td>SMS</td><td>' + N(G.vSm) + '</td></tr>');
+    h.push('<tr><td>Back-office</td><td>' + N(G.vBo) + '</td></tr>');
+    h.push('<tr class="tot"><td>Total</td><td>' + N(G.totalVol) + '</td></tr>');
+    h.push('</tbody></table>');
+    h.push('<div style="margin-top:10px;font-size:11px;color:#94A3B8">Y2: <strong style="color:#0B1D3A">' + N(G.y2Vol) + '</strong> | Deflection: <strong style="color:#00BFA6">' + G.deflPct + '%</strong> | IVR: <strong style="color:#0EA5E9">' + G.ivrContainPct + '%</strong></div></div>');
+
+    h.push('<div class="sec"><div class="st">Platform Sizing</div>');
+    h.push('<table><thead><tr><th>Component</th><th>Value</th></tr></thead><tbody>');
+    h.push('<tr><td>Peak Concurrent Voice</td><td>' + G.concurrent + '</td></tr>');
+    h.push('<tr><td>SIP Channels</td><td>' + G.sipChannels + ' (+20%)</td></tr>');
+    h.push('<tr><td>IVR Ports</td><td>' + G.ivrPorts + '</td></tr>');
+    h.push('<tr><td>Telephony</td><td>' + pstnLabel + '</td></tr>');
+    h.push('<tr><td>Voice AHT</td><td>' + Math.round(G.voiceAHT) + 's (' + (G.voiceAHT/60).toFixed(1) + 'm)</td></tr>');
+    h.push('<tr><td>Recording (' + G.retention + 'mo)</td><td>' + G.storageDisplay + '</td></tr>');
+    h.push('<tr><td>Queues</td><td>' + G.queueCount + '</td></tr>');
+    h.push('<tr><td>Integrations</td><td>' + G.integCount + '</td></tr>');
+    h.push('<tr><td>Environments</td><td>' + G.envCount + '</td></tr>');
+    h.push('</tbody></table></div>');
+
+    h.push('<div class="sec"><div class="st">Post-Deflection (Monthly)</div>');
+    h.push('<table><thead><tr><th>Metric</th><th>Volume</th></tr></thead><tbody>');
+    h.push('<tr><td>Voice to Agent</td><td>' + N(G.voiceToAgent) + '</td></tr>');
+    h.push('<tr><td>Chat to Agent</td><td>' + N(G.chatToAgent) + '</td></tr>');
+    h.push('<tr class="hl"><td>Human-handled</td><td>' + N(G.humanTotal) + '</td></tr>');
+    h.push('<tr class="hl"><td>Bot / AI</td><td>' + N(G.botHandled) + '</td></tr>');
+    h.push('</tbody></table></div>');
+
+    h.push('<div class="sec"><div class="st">Solution Components</div>');
+    h.push('<div style="margin-bottom:12px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#94A3B8;margin-bottom:6px">Channels</div><div class="cl">' + channelChips + '</div></div>');
+    h.push('<div style="margin-bottom:12px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#94A3B8;margin-bottom:6px">AI</div><div class="cl">' + aiChips + '</div></div>');
+    h.push('<div><div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#94A3B8;margin-bottom:6px">Salesforce</div><div class="cl">' + sfChips + '</div></div></div>');
+
+    h.push('<div class="sec"><div class="st">Commercial Estimate</div>');
+    h.push('<table><thead><tr><th>Item</th><th>Amount</th></tr></thead><tbody>');
+    h.push('<tr><td>Implementation CAPEX</td><td>' + capexCell + '</td></tr>');
+    h.push('<tr><td>&nbsp;&nbsp;\u21b3 ' + N(Math.round(G.totalHours)) + ' hrs @ blended rate</td><td style="color:#94A3B8;font-weight:500">+' + riskPct + '% contingency</td></tr>');
+    h.push(ospAmortRow);
+    h.push('<tr><td colspan="2" style="padding:4px;border:none"></td></tr>');
+    h.push('<tr><td>Platform Licensing</td><td>' + F(G.monthlyLic) + '/mo</td></tr>');
+    h.push('<tr><td>AI / Automation</td><td>' + F(G.monthlyAI) + '/mo</td></tr>');
+    h.push('<tr class="tot"><td>Total OPEX</td><td>' + F(G.techOpex) + '/mo</td></tr>');
+    h.push('<tr><td colspan="2" style="padding:4px;border:none"></td></tr>');
+    h.push('<tr><td>Status Quo Cost</td><td>' + F(G.currentCost) + '/mo</td></tr>');
+    h.push('<tr><td>Future Cost</td><td>' + F(G.futureHumanCost + G.techOpex) + '/mo</td></tr>');
+    h.push('<tr class="tot"><td>Net Savings</td><td style="color:' + savColor + '">' + F(G.monthlySavings) + '/mo</td></tr>');
+    h.push('</tbody></table></div>');
+
+    h.push('<div class="sec"><div class="st">Timeline</div>');
+    h.push('<table><thead><tr><th>Item</th><th>Estimate</th></tr></thead><tbody>');
+    h.push('<tr><td>Build</td><td>' + G.buildWeeks + ' Weeks</td></tr>');
+    h.push('<tr><td>Effort</td><td>' + N(Math.round(G.totalHours)) + ' Hours</td></tr>');
+    h.push('<tr><td>Client SME</td><td>~' + G.smeHours + ' Hours</td></tr>');
+    h.push('<tr><td>BUs / Countries / Sites</td><td>' + G.busUnits + ' / ' + G.countries + ' / ' + G.sites + '</td></tr>');
+    h.push('<tr><td>Languages</td><td>' + G.languages + '</td></tr>');
+    h.push('</tbody></table></div>');
+
+    h.push('<div class="sec"><div class="st">Complexity Flags</div>' + flagRows + '</div>');
+
+    h.push('<div class="co"><h3>Important</h3><p>Indicative sizing estimate. Subject to formal discovery. Licensing approximate per Salesforce terms. Includes ' + riskPct + '% contingency. Not a binding offer.</p></div>');
+
+    h.push('</div>');
+    h.push('<div class="ft"><div><strong>Innovior</strong> \u2014 a Probe Group company</div><div>Confidential | ' + d + '</div></div>');
+    h.push('</div></body></html>');
+
+    var blob = new Blob([h.join('\n')], {type: 'text/html'});
+    window.open(URL.createObjectURL(blob), '_blank');
+}
+
+window.onload = calc;
+</script>
+</body>
+</html>
